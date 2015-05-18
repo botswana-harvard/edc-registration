@@ -1,0 +1,4 @@
+
+
+class SubjectError(Exception):
+    pass

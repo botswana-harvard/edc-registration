@@ -12,11 +12,11 @@ else:
     from edc.device.sync.models import BaseSyncUuidModel
 
 from edc.choices.common import GENDER_UNDETERMINED
-from edc.base.model.validators import dob_not_future, MinConsentAge, MaxConsentAge
-from edc.base.model.fields import IsDateEstimatedField
+from edc_base.model.validators import dob_not_future, MinConsentAge, MaxConsentAge
+from edc_base.model.fields import IsDateEstimatedField
 from edc.core.crypto_fields.fields import (EncryptedFirstnameField, EncryptedLastnameField,
                                            EncryptedCharField)
-from edc.subject.consent.exceptions import ConsentError
+from edc_subject.consent.exceptions import ConsentError
 from edc.core.identifier.exceptions import IdentifierError
 from ..managers import BaseSubjectManager
 

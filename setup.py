@@ -22,9 +22,9 @@ setup(
     long_description=README,
     zip_safe=False,
     keywords='astm for Django apps',
-    #install_requires=[
+    # install_requires=[
     #    'Django>=1.7',
-    #],
+    # ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

@@ -15,7 +15,4 @@ db.sqlite3
 *.key
 *.pem
 build
-registration.egg-info
-__pycache__
-test-aes*
-test-salt*
+*.egg-info

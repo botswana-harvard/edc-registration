@@ -10,8 +10,8 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='edc_registration',
-    version='0.1.0',
+    name='edc-registration',
+    version='0.1.1',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),

@@ -16,10 +16,10 @@ install:
   - pip install -q -r requirements.txt --use-mirrors
 
 before_script:
-  - flake8 registration
+  - flake8 edc_registration
 
 script: 
-  - coverage run --source=registration manage.py test registration.tests
+  - coverage run --source=edc_registration manage.py test
 
 after_success:
   - coveralls

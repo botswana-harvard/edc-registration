@@ -10,21 +10,21 @@ with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-crypto-fields',
-    version='0.1.2',
+    name='edc_registration',
+    version='0.1.0',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
     include_package_data=True,
-    url='http://github/erikvw/edc-registration',
-    license='GPL licence, see LICENCE',
+    url='https://github.com/botswana-harvard/edc-registration',
+    license='GPL license, see LICENSE',
     description='Patient / study participant registration',
     long_description=README,
     zip_safe=False,
     keywords='astm for Django apps',
-    install_requires=[
-        'Django>=1.7',
-    ],
+    #install_requires=[
+    #    'Django>=1.7',
+    #],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

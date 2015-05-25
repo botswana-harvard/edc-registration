@@ -17,3 +17,5 @@ db.sqlite3
 build
 registration.egg-info
 __pycache__
+test-aes*
+test-salt*

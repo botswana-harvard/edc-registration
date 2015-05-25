@@ -283,7 +283,7 @@ class BaseSubject (BaseUuidModel):
 #             raise ConsentError('Attribute subject_identifier_as_pk on model '
 #                                '{0} may not be left blank. Expected to be set '
 #                                'to a uuid already.'.format(self._meta.object_name))
->>>>>>> 5bfa1a87519c4bf6b408e00c176dc3d8438a6149
+
 
     class Meta:
         abstract = True

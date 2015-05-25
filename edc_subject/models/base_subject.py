@@ -115,23 +115,6 @@ class BaseSubject (BaseSyncUuidModel):
             return True
         return False
 
-#     def _get_or_created_registered_subject(self, using):
-#         registered_subject = None
-#         if 'registered_subject' in dir(self):
-#             if self.registered_subject:
-#                 registered_subject = self.registered_subject
-#         if not registered_subject:
-#             RegisteredSubject = get_model('registration', 'registeredsubject')
-#             try:
-#                 registered_subject = RegisteredSubject.objects.using(using).get(
-#                     subject_identifier=self.subject_identifier)
-#                 self._update_registered_subject(using, registered_subject)
-#             except RegisteredSubject.DoesNotExist:
-#                 options = self._get_registered_subject_options()
-#                 registered_subject = RegisteredSubject.objects.using(using).create(
-#                     subject_identifier=self.subject_identifier, **options)
-#         return registered_subject
-
     def post_save_get_or_create_registered_subject(self, **kwargs):
         """Creates or \'gets and updates\' the registered
         subject instance for this subject.
@@ -191,7 +174,7 @@ class BaseSubject (BaseSyncUuidModel):
                     setattr(self, self.get_user_provided_subject_identifier_attrname(), self.subject_identifier)
         super(BaseSubject, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return "{0} {1}".format(self.mask_unset_subject_identifier(), self.subject_type)
 
     def natural_key(self):

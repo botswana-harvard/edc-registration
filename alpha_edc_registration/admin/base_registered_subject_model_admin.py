@@ -1,10 +1,6 @@
 from django.core.exceptions import ImproperlyConfigured
 
 from edc_base.modeladmin.admin import BaseModelAdmin
-# from edc.export.actions import export_as_csv_action
-# from edc_appointment.models import Appointment
-
-# from ..models import RegisteredSubject
 
 
 class BaseRegisteredSubjectModelAdmin (BaseModelAdmin):

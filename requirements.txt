@@ -1,7 +1,6 @@
 Django==1.6
 M2Crypto==0.22.3
 django_extensions
-django-simple-history
 python-dateutil
 Unipath
 GitPython

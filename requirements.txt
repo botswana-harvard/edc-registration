@@ -1,3 +1,13 @@
 Django==1.6
+M2Crypto==0.22.3
+django_extensions
+django-simple-history
+python-dateutil
+Unipath
+GitPython
+factory-boy
+pytz
 -e git+https://github.com/botswana-harvard/edc-base@develop#egg=edc-base
 -e git+https://github.com/botswana-harvard/edc-constants@develop#egg=edc-constants
+-e git+https://github.com/botswana-harvard/edc-sync@develop#egg=edc-sync
+-e git+https://github.com/botswana-harvard/edc-crypto-fields@develop#egg=edc-crypto-fields

@@ -4,8 +4,9 @@
 
 The model `RegisteredSubject` is used by the Edc as the master subject registration table. Only one record may exist per individual. This model is used by other models as a link the subject. Some models explicitly include a foreign key to `RegisteredSubject` while others will reach `RegisteredSubject`, for example, via a foreign key to a visit tracking model.
 
-* `RegisteredSubject` is completed in a signal and not by the user. As other models that collect the required information are created the signal will update. The best model to use is the ICF. You need to write and connect the signal yourself. See `edc_consent`.
-* Registration models such as eligibility model forms usually have a foreign key `RegisteredSubject`. Registration models are usually configured as "membership forms" and register a subject to one or more a pre-defined visit schedules. See `edc_visit_schedule`.
+* `RegisteredSubject` is created in a signal, not by the user. You need to write this signal yourself. It should be connected to the model that collects the required information, usually the ICF or something that looks like it. See `edc_consent`.
+* Any updates to the model that has the information for `RegisteredSubject` are handled by a signal in `edc_registration`. See `models.signals.py`
+* Registration models, such as eligibility models, usually have a foreign key `RegisteredSubject`. Registration models are usually configured as "membership forms" and register a subject to one or more a pre-defined visit schedules. See `edc_visit_schedule`.
 * The `Appointment` model has a foreign key to `RegisteredSubject`. See `edc_appoinment`.
 * Crf models usually reach  `RegisteredSubject` via a foreign key to a visit tracking model which has a foreign key to `Appointment`. See `edc_visit_tracking` and `edc_appointment`.
 

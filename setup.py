@@ -11,7 +11,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='edc-registration',
-    version='0.1.1',
+    version='0.1.dev2',
     author=u'Erik van Widenfelt',
     author_email='ew2789@gmail.com',
     packages=find_packages(),
@@ -21,10 +21,7 @@ setup(
     description='Patient / study participant registration',
     long_description=README,
     zip_safe=False,
-    keywords='astm for Django apps',
-    # install_requires=[
-    #    'Django>=1.7',
-    # ],
+    keywords='Edc registration classes',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',

@@ -11,13 +11,20 @@ Declare `RegisteredSubject` in your app using the `RegisteredSubjectModelMixin`,
         class Meta:
             app_label = 'my_app'
             
-then in `edc_registration` AppConfig specify the `app_label`, `app_label = 'my_app'` so that other modules in the Edc can find `RegisteredSubject`. (Note: The model_name is assumed to always be 'RegisteredSubject'. 
+then in `edc_registration` AppConfig specify the `app_label = 'my_app'` so that other modules in the Edc can find the model class. (Note: The model_name is assumed to always be `RegisteredSubject`). 
+
+Other modules can find the model class by accessing the AppConfig:
+
+    >>> from django.apps import apps as django_apps
+    >>> RegisteredSubject = django_apps.get_app_config('edc_registration').model
+    >>> RegisteredSubject.objects.get(subject_identifier='12345678-9')
+    <RegisteredSubject: 12345678-9>
 
 ### RegistrationMixin
 
 `RegisteredSubject` is never edited directly by the user. Instead some other model with the needed attributes is used as a proxy. To have a model perform the task of creating or updating  `RegisteredSubject`, declare it with the `RegistrationMixin`.
 
-A model, such as the `SubjectConsent` in `edc-example` app, creates or updates a subject's `RegisteredSubject` instance on save. For this to happen, `SubjectConsent` is declared with the `RegistrationMixin`, for example:
+For example, a model, such as the `SubjectConsent` in `edc-example` app, creates or updates a subject's `RegisteredSubject` instance on save. For this to happen, `SubjectConsent` is declared with the `RegistrationMixin`:
 
     class SubjectConsent(ConsentModelMixin, RegistrationMixin, CreateAppointmentsMixin,
                          IdentityFieldsMixin, ReviewFieldsMixin, PersonalFieldsMixin,
@@ -59,7 +66,7 @@ and update settings accordingly:
 
 ### RegisteredSubjectMixin
 
-Since the location of `app_label` of the model class `RegisteredSubject` is not known when the models classes are loaded, it is difficult to include the class as a foreign key. As a work around, use the `RegisteredSubjectMixin`. When this mixin is declared on your model, the `subject_identifier` field is added to the model and verified against `RegisteredSubject` on save.
+Since the `app_label` of the model class `RegisteredSubject` is not known when the models classes are loaded, it is difficult to include the class as a foreign key. As a work around, use the `RegisteredSubjectMixin`. When this mixin is declared on your model, the `subject_identifier` field is added to the model and verified against `RegisteredSubject` on each save.
 
 The `subject_identifier` field is added with `editable=False`. You must provide the correct subject identifier programmatically or the model will raise an `RegisteredSubject.DoesNotExist` exception on save.
 

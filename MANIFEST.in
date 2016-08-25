@@ -1,0 +1,5 @@
+recursive-include edc_registration/templates *
+recursive-include edc_registration/static *
+recursive-include docs *
+recursive-exclude edc_example/*
+recursive-exclude etc/*

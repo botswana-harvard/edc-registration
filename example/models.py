@@ -5,7 +5,7 @@ from django_crypto_fields.fields.firstname_field import FirstnameField
 from django_crypto_fields.fields.lastname_field import LastnameField
 
 from edc_base.model.models.base_uuid_model import BaseUuidModel
-from edc_registration.model_mixins import RegisteredSubjectModelMixin, RegistrationMixin
+from edc_registration.model_mixins import RegisteredSubjectModelMixin, UpdatesOrCreatesRegistrationModelMixin
 
 
 class RegisteredSubject(RegisteredSubjectModelMixin, BaseUuidModel):
@@ -14,7 +14,7 @@ class RegisteredSubject(RegisteredSubjectModelMixin, BaseUuidModel):
         app_label = 'edc_example'
 
 
-class Enroll(RegistrationMixin, BaseUuidModel):
+class Enroll(UpdatesOrCreatesRegistrationModelMixin, BaseUuidModel):
 
     identity = models.CharField(
         max_length=25)

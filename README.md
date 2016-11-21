@@ -20,13 +20,13 @@ Other modules can find the model class by accessing the AppConfig:
     >>> RegisteredSubject.objects.get(subject_identifier='12345678-9')
     <RegisteredSubject: 12345678-9>
 
-### RegistrationMixin
+### UpdatesOrCreatesRegistrationModelMixin
 
-`RegisteredSubject` is never edited directly by the user. Instead some other model with the needed attributes is used as a proxy. To have a model perform the task of creating or updating  `RegisteredSubject`, declare it with the `RegistrationMixin`.
+`RegisteredSubject` is never edited directly by the user. Instead some other model with the needed attributes is used as a proxy. To have a model perform the task of creating or updating  `RegisteredSubject`, declare it with the `UpdatesOrCreatesRegistrationModelMixin`.
 
-For example, a model, such as the `SubjectConsent` in `edc-example` app, creates or updates a subject's `RegisteredSubject` instance on save. For this to happen, `SubjectConsent` is declared with the `RegistrationMixin`:
+For example, a model, such as the `SubjectConsent` in `edc-example` app, creates or updates a subject's `RegisteredSubject` instance on save. For this to happen, `SubjectConsent` is declared with the `UpdatesOrCreatesRegistrationModelMixin`:
 
-    class SubjectConsent(ConsentModelMixin, RegistrationMixin, CreateAppointmentsMixin,
+    class SubjectConsent(ConsentModelMixin, UpdatesOrCreatesRegistrationModelMixin, CreateAppointmentsMixin,
                          IdentityFieldsMixin, ReviewFieldsMixin, PersonalFieldsMixin,
                          CitizenFieldsMixin, VulnerabilityFieldsMixin, BaseUuidModel):
 

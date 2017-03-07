@@ -2,25 +2,73 @@
 
 [![Build Status](https://travis-ci.org/botswana-harvard/edc-registration.svg?branch=develop)](https://travis-ci.org/botswana-harvard/edc-registration) [![Coverage Status](https://coveralls.io/repos/botswana-harvard/edc-registration/badge.svg?branch=develop&service=github)](https://coveralls.io/github/botswana-harvard/edc-registration?branch=develop)
 
-The model `RegisteredSubject` is used by the Edc as the master subject registration table. Only one record may exist per individual. This model is used by other models as a link the subject. Some models explicitly include a foreign key to `RegisteredSubject` while others will reach `RegisteredSubject`, for example, via a foreign key to a visit tracking model.
+The model `RegisteredSubject` is used by the Edc as the master subject registration table. Only one record may exist per individual. The table has space for PII so typically a `RegisteredSubject` instance is created on completion of the informed consent. As always, PII in the Edc is encrypted at rest using `django-crypto-field`.
 
-* `RegisteredSubject` is created in a signal, not by the user. You need to write this signal yourself. It should be connected to the model that collects the required information, usually the ICF or something that looks like it. See `edc_consent`.
-* Any updates to the model that has the information for `RegisteredSubject` are handled by a signal in `edc_registration`. See `models.signals.py`
-* Registration models, such as eligibility models, usually have a foreign key `RegisteredSubject`. Registration models are usually configured as "membership forms" and register a subject to one or more a pre-defined visit schedules. See `edc_visit_schedule`.
-* The `Appointment` model has a foreign key to `RegisteredSubject`. See `edc_appoinment`.
-* Crf models usually reach  `RegisteredSubject` via a foreign key to a visit tracking model which has a foreign key to `Appointment`. See `edc_visit_tracking` and `edc_appointment`.
+### RegisteredSubjectModelMixin
+Declare `RegisteredSubject` in your app using the `RegisteredSubjectModelMixin`, for example:
 
-In settings you need to add the types of subjects that will be registered and if there is a registration cap on any of them. Field `subject_type` is a required on the `RegisteredSubject` model.
+    class RegisteredSubject(RegisteredSubjectModelMixin, BaseUuidModel):
+        class Meta:
+            app_label = 'my_app'
+            
+then in `edc_registration` AppConfig specify the `app_label = 'my_app'` so that other modules in the Edc can find the model class. (Note: The model_name is assumed to always be `RegisteredSubject`). 
 
-If you are using the defaults, then there is no need to explicitly define these attributes in `settings.py`. The defaults are this:
+Other modules can find the model class by accessing the AppConfig:
 
-    SUBJECT_TYPES = ['subject']
-    MAX_SUBJECTS = {'subject': -1}
+    >>> from django.apps import apps as django_apps
+    >>> RegisteredSubject = django_apps.get_app_config('edc_registration').model
+    >>> RegisteredSubject.objects.get(subject_identifier='12345678-9')
+    <RegisteredSubject: 12345678-9>
 
-If you have something other than the defaults, they might look like this:
+### UpdatesOrCreatesRegistrationModelMixin
 
-    SUBJECT_TYPES = ['mother', 'infant']
-    MAX_SUBJECTS = {'mother': 3000, 'infants': -1}
+`RegisteredSubject` is never edited directly by the user. Instead some other model with the needed attributes is used as a proxy. To have a model perform the task of creating or updating  `RegisteredSubject`, declare it with the `UpdatesOrCreatesRegistrationModelMixin`.
 
-If there is no registration cap for a given subject type, set the number to -1.
+For example, a model, such as the `SubjectConsent` in `edc-example` app, creates or updates a subject's `RegisteredSubject` instance on save. For this to happen, `SubjectConsent` is declared with the `UpdatesOrCreatesRegistrationModelMixin`:
+
+    class SubjectConsent(ConsentModelMixin, UpdatesOrCreatesRegistrationModelMixin, CreateAppointmentsMixin,
+                         IdentityFieldsMixin, ReviewFieldsMixin, PersonalFieldsMixin,
+                         CitizenFieldsMixin, VulnerabilityFieldsMixin, BaseUuidModel):
+
+    class Meta:
+        app_label = 'my_app'
     
+
+A subject's `RegisteredSubject` instance is created and updated in a `post_save` signal. As mentioned, it is never edited directly by the user.
+
+For the signal to be registered you need to add the AppConfig to your INSTALLED_APPS:
+
+    INSTALLED_APPS = (
+        ....
+        'edc_registration.apps.AppConfig',
+        ....
+        )
+        
+However, since `RegisteredSubject` is not a model in `edc_registration`, you should subclass `AppConfig` instead, for example:
+
+    from django.apps import AppConfig as DjangoAppConfig
+    from edc_registration.apps import AppConfig as EdcRegistrationAppConfigParent
+    
+    class AppConfig(DjangoAppConfig):
+        name = 'my_app'
+
+    class EdcRegistrationAppConfig(EdcRegistrationAppConfigParent):
+        app_label = 'my_app'
+
+and update settings accordingly:
+
+    INSTALLED_APPS = (
+        ....
+        'my_app.apps.EdcRegistrationAppConfig',
+        'my_app.apps.AppConfig',
+        ....
+        )
+
+### RegisteredSubjectMixin
+
+Since the `app_label` of the model class `RegisteredSubject` is not known when the models classes are loaded, it is difficult to include the class as a foreign key. As a work around, use the `RegisteredSubjectMixin`. When this mixin is declared on your model, the `subject_identifier` field is added to the model and verified against `RegisteredSubject` on each save.
+
+The `subject_identifier` field is added with `editable=False`. You must provide the correct subject identifier programmatically or the model will raise an `RegisteredSubject.DoesNotExist` exception on save.
+
+
+     

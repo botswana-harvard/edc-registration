@@ -1,6 +1,6 @@
 # edc-registration
 
-[![Build Status](https://travis-ci.org/botswana-harvard/edc-registration.svg?branch=develop)](https://travis-ci.org/botswana-harvard/edc-registration) [![Coverage Status](https://coveralls.io/repos/botswana-harvard/edc-registration/badge.svg?branch=develop&service=github)](https://coveralls.io/github/botswana-harvard/edc-registration?branch=develop)
+[![Build Status](https://travis-ci.org/botswana-harvard/edc-registration.svg?branch=develop)](https://travis-ci.org/botswana-harvard/edc-registration) [![Coverage Status](https://coveralls.io/repos/github/botswana-harvard/edc-registration/badge.svg?branch=develop)](https://coveralls.io/github/botswana-harvard/edc-registration?branch=develop)
 
 The model `RegisteredSubject` is used by the Edc as the master subject registration table. Only one record may exist per individual. The table has space for PII so typically a `RegisteredSubject` instance is created or updated on completion of the informed consent. As always, PII in the Edc is encrypted at rest using `django-crypto-field`.
 

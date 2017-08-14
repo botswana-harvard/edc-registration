@@ -49,7 +49,6 @@ For example, a model, `SubjectEligibility` or a screening model creates or updat
                          IdentityFieldsMixin, ReviewFieldsMixin, PersonalFieldsMixin,
                          CitizenFieldsMixin, VulnerabilityFieldsMixin, BaseUuidModel):
                          
-
 		@property
 	    def registration_unique_field(self):
 	        return 'screening_identifier'

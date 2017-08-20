@@ -1,3 +1,4 @@
+edc_registration/migrations/*
 *.py[cod]
 *.sh
 .project

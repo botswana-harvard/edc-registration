@@ -1,2 +1,3 @@
 from .registered_subject_model_mixin import RegisteredSubjectModelMixin, RegisteredSubjectError
+from .registered_subbject import RegisteredSubject
 from .signals import update_registered_subject_from_consent_on_post_save

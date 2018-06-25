@@ -14,6 +14,7 @@ from django_crypto_fields.mask_encrypted import mask_encrypted
 from simple_history.models import HistoricalRecords as AuditTrail
 
 from edc_base.model.fields import IdentityTypeField
+from edc_base.model.models.base_uuid_model import BaseUuidModel
 from edc_base.model.fields.custom_fields import IsDateEstimatedField
 from edc_constants.choices import YES_NO, POS_NEG_UNKNOWN, ALIVE_DEAD_UNKNOWN
 
@@ -79,12 +80,14 @@ class RegisteredSubjectModelMixin(models.Model):
         help_text='track a previously allocated identifier.'
     )
 
-    # may not be available when instance created (e.g. infants prior to birth report)
+    # may not be available when instance created (e.g. infants prior to birth
+    # report)
     first_name = FirstnameField(
         null=True,
     )
 
-    # may not be available when instance created (e.g. infants or household subject before consent)
+    # may not be available when instance created (e.g. infants or household
+    # subject before consent)
     last_name = LastnameField(
         verbose_name="Last name",
         null=True)
@@ -284,9 +287,11 @@ class RegisteredSubjectModelMixin(models.Model):
                 obj = self.__class__.objects.using(using).get(
                     subject_identifier=self.subject_identifier)
                 if not self.id:
-                    raise RegisteredSubjectError(error_msg.format(action='insert'))
+                    raise RegisteredSubjectError(
+                        error_msg.format(action='insert'))
                 elif self.subject_identifier_is_set() and obj.id != self.id:
-                    raise RegisteredSubjectError(error_msg.format(action='update'))
+                    raise RegisteredSubjectError(
+                        error_msg.format(action='update'))
             except self.__class__.DoesNotExist:
                 pass
 
@@ -305,7 +310,8 @@ class RegisteredSubjectModelMixin(models.Model):
         if not self.id:
             max_subject = self.max_subjects.get(self.subject_type)
             if max_subject >= 0:
-                count = self.__class__.objects.filter(subject_type=self.subject_type).count()
+                count = self.__class__.objects.filter(
+                    subject_type=self.subject_type).count()
                 if count >= max_subject:
                     raise exception_cls(
                         'Maximum number of subjects has been reached for subject_type \'{}\'. '
@@ -317,7 +323,8 @@ class RegisteredSubjectModelMixin(models.Model):
         Model uses subject_identifier_as_pk as a natural key for
         serialization/deserialization. Value must not change once set."""
         if not self.subject_identifier_as_pk:
-            self.subject_identifier_as_pk = str(uuid4())  # this will never change
+            self.subject_identifier_as_pk = str(
+                uuid4())  # this will never change
             if not self.subject_identifier:
                 self.subject_identifier = self.subject_identifier_as_pk
 
@@ -363,3 +370,11 @@ class RegisteredSubjectModelMixin(models.Model):
         verbose_name = 'Registered Subject'
         ordering = ['subject_identifier']
         unique_together = ('first_name', 'dob', 'initials', 'additional_key')
+
+
+class RegisteredSubject(RegisteredSubjectModelMixin, BaseUuidModel):
+
+    history = AuditTrail()
+
+    class Meta:
+        app_label = 'edc_registration'

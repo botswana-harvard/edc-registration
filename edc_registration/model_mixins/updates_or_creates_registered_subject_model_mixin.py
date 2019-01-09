@@ -32,6 +32,7 @@ class UpdatesOrCreatesRegistrationModelMixin(models.Model):
 
         registration_value = getattr(self, self.registration_unique_field)
         registration_value = self.to_string(registration_value)
+
         try:
             obj = self.registration_model.objects.get(
                 **{self.registered_subject_unique_field: registration_value})
